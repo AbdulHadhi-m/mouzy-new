@@ -1,0 +1,114 @@
+@font-face {
+  font-family: 'ObelixPro';
+  src: url('./assets/ObelixPro.ttf') format('truetype');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Palpiyo';
+  src: url('./assets/Palpiyo.ttf') format('truetype');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    -webkit-tap-highlight-color: transparent;
+  }
+  
+  body {
+    @apply bg-brand-green-black text-brand-cream-dark font-sans antialiased overflow-x-hidden;
+    background-image: 
+      radial-gradient(circle at 10% 20%, rgba(16, 104, 41, 0.08) 0%, transparent 40%),
+      radial-gradient(circle at 90% 80%, rgba(253, 243, 2, 0.03) 0%, transparent 40%);
+  }
+
+  /* Focus styling for accessibility */
+  *:focus-visible {
+    @apply outline-none ring-2 ring-brand-yellow-warm ring-offset-2 ring-offset-brand-green-black;
+  }
+
+  /* Custom selection styling */
+  ::selection {
+    @apply bg-brand-yellow text-brand-green-dark;
+  }
+
+  /* Heading typography */
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-display font-semibold tracking-tight text-white;
+  }
+}
+
+@layer components {
+  /* Premium Glassmorphism Panel */
+  .glass-panel {
+    @apply bg-brand-green-deep/75 backdrop-blur-md border border-white/5 shadow-xl;
+  }
+  
+  .glass-card {
+    @apply bg-white/[0.02] backdrop-blur-sm border border-white/[0.05] shadow-lg rounded-2xl transition-all duration-300;
+  }
+  
+  .glass-card:hover {
+    @apply border-white/[0.12] bg-white/[0.04] -translate-y-1 shadow-brand-green/10 shadow-2xl;
+  }
+
+  /* Hide default scrollbars for clean slider lists if needed */
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+}
+
+/* Floating Animations for Hero Ingredients */
+@keyframes float-nut-1 {
+  0%, 100% { transform: translate(0, 0) rotate(0deg); }
+  50% { transform: translate(-8px, -12px) rotate(8deg); }
+}
+@keyframes float-nut-2 {
+  0%, 100% { transform: translate(0, 0) rotate(0deg); }
+  50% { transform: translate(10px, 6px) rotate(-10deg); }
+}
+@keyframes float-leaf {
+  0%, 100% { transform: translate(0, 0) rotate(0deg); }
+  50% { transform: translate(-6px, 10px) rotate(12deg); }
+}
+
+.animate-float-nut-1 {
+  animation: float-nut-1 4.5s ease-in-out infinite;
+}
+.animate-float-nut-2 {
+  animation: float-nut-2 5.5s ease-in-out infinite;
+}
+.animate-float-leaf {
+  animation: float-leaf 5s ease-in-out infinite;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-brand-green-black;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-brand-green-dark/60 rounded-full border border-brand-green-black;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-brand-green/80;
+}
