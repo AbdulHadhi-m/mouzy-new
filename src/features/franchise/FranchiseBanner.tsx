@@ -28,13 +28,13 @@ export const FranchiseBanner: React.FC<FranchiseBannerProps> = ({ onApplyClick }
               />
             </div>
 
-            {/* Left Content text */}
-            <div className="relative z-10 space-y-2">
-              <span className="text-xl sm:text-2xl font-bold font-display text-white block tracking-wide uppercase">
-                Become a
+            {/* Left Content text (Banavil style) */}
+            <div className="relative z-10 space-y-1">
+              <span className="text-xl sm:text-2xl font-extrabold font-display text-white block tracking-widest uppercase">
+                BECOME A
               </span>
               <h2 className="text-3xl sm:text-5xl font-black font-display text-white tracking-widest leading-none uppercase">
-                Mouzy Owner
+                <span className="text-brand-yellow">MOUZY</span> OWNER
               </h2>
             </div>
 
@@ -42,9 +42,9 @@ export const FranchiseBanner: React.FC<FranchiseBannerProps> = ({ onApplyClick }
             <div className="relative z-10 flex-shrink-0">
               <button 
                 onClick={onApplyClick}
-                className="bg-[#fef200] hover:bg-white text-[#05220c] font-display font-extrabold text-sm sm:text-base px-10 py-4 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 active:scale-95 uppercase tracking-wider outline-none focus:outline-none"
+                className="bg-brand-yellow hover:bg-white text-brand-green-dark font-extrabold text-sm sm:text-base px-10 py-4 rounded-full shadow-xl hover:shadow-2xl hover:scale-105 transition-all duration-300 active:scale-95 uppercase tracking-wider outline-none focus:outline-none"
               >
-                Apply Now
+                APPLY NOW
               </button>
             </div>
 
