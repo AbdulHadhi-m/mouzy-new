@@ -16,7 +16,7 @@ export default {
             black: '#031106',   // Soft rich black with green tint
           },
           yellow: {
-            DEFAULT: '#fdf302', // Vibrant banana yellow
+            DEFAULT: '#FFF200', // Signature vibrant yellow
             light: '#fffa65',
             dark: '#c9c000',
             warm: '#f5e025',    // Rich warm yellow/gold

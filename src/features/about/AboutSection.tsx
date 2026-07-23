@@ -1,93 +1,91 @@
 import React from 'react';
 
-// Import real storefront and standing mascot images
-import realStorefront from '../../assets/real_storefront.png';
-import character from '../../assets/character.png';
+// Import about1.png and standing mascot image A2.png for About Us section
+import about1Img from '../../assets/about1.png';
+import a2Img from '../../assets/A2.png';
 
 export const AboutSection: React.FC = () => {
-  const handleScrollToProducts = () => {
-    const target = document.querySelector('#items');
-    target?.scrollIntoView({ behavior: 'smooth' });
-  };
-
   return (
     <section 
       id="about" 
-      className="py-24 bg-[#fefcf0] text-brand-green-dark relative overflow-hidden"
+      className="py-20 sm:py-28 bg-[#FFF200] text-brand-green-dark relative overflow-hidden"
       aria-labelledby="about-heading"
     >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 items-center">
-          
-          {/* Column Left (Storefront facade in custom blob shape + standing thumbs-up mascot) */}
-          <div className="lg:col-span-6 flex justify-center relative select-none">
-            {/* Storefront blob container */}
-            <div className="relative w-80 sm:w-[400px] h-[320px] sm:h-[400px] flex items-center justify-center">
-              
-              {/* Fluid mask blob shape containing the storefront image */}
-              <div 
-                className="w-full h-full border-4 border-brand-green overflow-hidden shadow-2xl relative"
-                style={{
-                  borderRadius: '60% 40% 30% 70% / 60% 30% 70% 40%',
-                }}
-              >
-                <img 
-                  src={realStorefront} 
-                  alt="Mouzy Real Storefront" 
-                  className="w-full h-full object-cover transform hover:scale-[1.05] transition-transform duration-700"
-                />
-                {/* Green tint overlay */}
-                <div className="absolute inset-0 bg-brand-green/5 mix-blend-multiply pointer-events-none" />
-              </div>
+      {/* Decorative background shapes */}
+      <div className="absolute top-0 right-0 w-96 h-96 bg-white/20 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute bottom-0 left-0 w-96 h-96 bg-brand-green/10 rounded-full blur-3xl pointer-events-none" />
 
-              {/* Overlapping Thumbs-up Mascot character in foreground */}
-              <div className="absolute bottom-[-20px] right-[-20px] sm:right-[-40px] z-20 w-44 sm:w-60 h-auto animate-float">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
+          
+          {/* Left Column: Store image in 5-lobed fluid organic blob + standing mascot character */}
+          <div className="lg:col-span-6 flex justify-center relative select-none">
+            <div className="relative w-72 sm:w-[450px] h-[320px] sm:h-[450px] flex items-center justify-center">
+              
+              {/* 5-Lobed Organic Fluid Blob SVG Container */}
+              <svg viewBox="0 0 500 500" className="w-full h-full filter drop-shadow-2xl">
+                <defs>
+                  <clipPath id="about-5-lobe-blob">
+                    <path d="M 250 30 C 295 30 315 90 365 75 C 415 60 445 115 455 170 C 465 225 425 275 435 335 C 445 395 390 445 330 445 C 270 445 255 395 195 415 C 135 435 85 405 65 350 C 45 295 80 245 60 185 C 40 125 90 70 150 70 C 205 70 205 30 250 30 Z" />
+                  </clipPath>
+                </defs>
+
+                {/* Background Storefront Image masked by 5-lobed blob */}
+                <image 
+                  href={about1Img} 
+                  width="500" 
+                  height="500" 
+                  preserveAspectRatio="xMidYMid slice" 
+                  clipPath="url(#about-5-lobe-blob)" 
+                />
+
+                {/* Dark Green Outer Border Stroke */}
+                <path 
+                  d="M 250 30 C 295 30 315 90 365 75 C 415 60 445 115 455 170 C 465 225 425 275 435 335 C 445 395 390 445 330 445 C 270 445 255 395 195 415 C 135 435 85 405 65 350 C 45 295 80 245 60 185 C 40 125 90 70 150 70 C 205 70 205 30 250 30 Z" 
+                  fill="none" 
+                  stroke="#0B6E4F" 
+                  strokeWidth="10" 
+                />
+              </svg>
+
+              {/* Overlapping Mascot character A2 in foreground */}
+              <div className="absolute bottom-[-25px] right-[-25px] sm:right-[-45px] z-20 w-44 sm:w-64 h-auto">
                 <img 
-                  src={character} 
-                  alt="Mouzy Thumbs-up Mascot" 
-                  className="w-full h-auto object-contain drop-shadow-[0_15px_30px_rgba(0,0,0,0.3)] hover:scale-105 transition-transform duration-300"
+                  src={a2Img} 
+                  alt="Mouzy Mascot Character" 
+                  className="w-full h-auto object-contain drop-shadow-[0_20px_40px_rgba(0,0,0,0.35)] hover:scale-105 transition-transform duration-300"
                 />
               </div>
 
             </div>
           </div>
 
-          {/* Column Right (About Us Texts and Cursive title) */}
+          {/* Right Column: About Us Texts with Banavil-style Kaushan Script title */}
           <div className="lg:col-span-6 flex flex-col justify-center space-y-6 text-left">
-            {/* Cursive Green Title */}
+            {/* Kaushan Script Cursive Heading */}
             <h2 
               id="about-heading" 
-              className="text-4xl sm:text-6xl text-brand-green font-palpiyo tracking-wide capitalize"
+              className="text-4xl sm:text-6xl text-brand-green-dark font-accent font-extrabold tracking-wide capitalize drop-shadow-sm"
             >
               About Us
             </h2>
 
-            {/* Content copy */}
-            <p className="text-sm sm:text-base text-gray-700 leading-relaxed font-medium">
-              Our dream of <strong>MOUZY</strong> has come true through a lot of future travels and the tastes we have experienced. Our goal was to provide more than 60 different Avilmilks in the best possible way.
+            {/* Official Mouzy content copy from mouzy.in */}
+            <p className="text-base sm:text-lg text-brand-green-dark leading-relaxed font-bold">
+              Our dream of <strong className="text-brand-green-dark font-black underline decoration-brand-green/30 decoration-2">MOUZY</strong> has come true through a lot of future travels and the tastes we have experienced. Our goal was to provide more than 60 different Avilmilks in the best possible way.
             </p>
             
-            <p className="text-xs sm:text-sm text-gray-600 leading-relaxed">
-              Mouzy officially launched in Perinthalmanna on <strong>March 2020</strong> (carrying the legacy of "Shimla Juice Shop" since 1985). The project has opened several branches in a short span of time and has been able to provide employment to many more.
+            <p className="text-sm sm:text-base text-brand-green-dark/95 leading-relaxed font-semibold">
+              Mouzy officially launched in Perinthalmanna on <strong className="text-brand-green-black font-extrabold">March 2020</strong> (carrying the legacy of "Shimla Juice Shop" established since 1985). The project has opened several branches in a short span of time and has been able to provide employment to many more.
             </p>
 
-            <p className="text-xs sm:text-sm text-gray-600 leading-relaxed">
+            <p className="text-sm sm:text-base text-brand-green-dark/95 leading-relaxed font-semibold">
               We strive to make this brand a favorite with fresh and quality products, instant making, and excellent service. The biggest feature of Avilmilk in Mouzy is that all the making is done fresh only after the customer has ordered it. In most other shops everything is set and processed. It cannot give the original taste of Avil milk.
             </p>
 
-            <p className="text-xs sm:text-sm text-gray-600 leading-relaxed">
+            <p className="text-sm sm:text-base text-brand-green-dark/95 leading-relaxed font-semibold">
               Our goal is to have more outlets inside and outside Kerala and thereby employ more people.
             </p>
-
-            {/* Blue Action Button exactly like mockup */}
-            <div className="pt-4">
-              <button 
-                onClick={handleScrollToProducts}
-                className="bg-[#1e73be] hover:bg-[#155d9b] text-white font-display font-bold text-sm px-8 py-3.5 rounded-full shadow-md hover:shadow-lg transition-all duration-300 active:scale-95 outline-none focus:outline-none"
-              >
-                Know More
-              </button>
-            </div>
           </div>
 
         </div>

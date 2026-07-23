@@ -6,15 +6,15 @@ export const Preloader: React.FC = () => {
   const [mounted, setMounted] = useState(true);
 
   useEffect(() => {
-    // Phase 1: trigger fade-out after 1400ms
+    // Phase 1: trigger fade-out after 1800ms
     const fadeTimer = setTimeout(() => {
       setVisible(false);
-    }, 1400);
+    }, 1800);
 
-    // Phase 2: completely unmount after 1900ms (500ms fade transition)
+    // Phase 2: completely unmount after 2300ms
     const unmountTimer = setTimeout(() => {
       setMounted(false);
-    }, 1900);
+    }, 2300);
 
     return () => {
       clearTimeout(fadeTimer);
@@ -26,38 +26,45 @@ export const Preloader: React.FC = () => {
 
   return (
     <div
-      className={`fixed inset-0 z-[100] flex flex-col items-center justify-center bg-[#fcf8d6] transition-opacity duration-500 overflow-hidden ${
+      className={`fixed inset-0 z-[100] flex flex-col items-center justify-center bg-[#fefce8] transition-opacity duration-500 overflow-hidden ${
         visible ? 'opacity-100' : 'opacity-0 pointer-events-none'
       }`}
       aria-hidden="true"
     >
-      {/* 1. Giant backdrop typography centered behind mascot */}
+      {/* 1. Backdrop typography (Decreased text size for clean fit) */}
       <div className="absolute inset-0 flex items-center justify-center select-none pointer-events-none z-0">
-        <span className="text-[20vw] sm:text-[16vw] font-black uppercase tracking-wider font-obelix leading-none text-brand-green/15 transform scale-105">
+        <span className="text-[12vw] sm:text-[9vw] font-black uppercase tracking-widest font-obelix leading-none text-brand-green/12 animate-pulse">
           MOUZY
         </span>
       </div>
 
       {/* 2. Main Mascot and Loader Container */}
-      <div className="relative z-10 flex flex-col items-center justify-center px-4 text-center">
-        {/* Animated Mascot */}
-        <div className="relative mb-2 animate-float">
+      <div className="relative z-10 flex flex-col items-center justify-center px-4 text-center max-w-lg w-full">
+        
+        {/* Animated Mascot Container with floating & bounce animation */}
+        <div className="relative mb-6 w-48 sm:w-56 h-48 sm:h-56 flex items-center justify-center">
+          
+          {/* Subtle soft shadow & aura blur */}
+          <div className="absolute bottom-2 left-1/2 -translate-x-1/2 w-32 sm:w-40 h-4 bg-black/15 rounded-full blur-md animate-pulse z-0" />
+
+          {/* Mouzy Mascot Image */}
           <img
             src={mouzyMascot}
             alt="Mouzy Mascot"
-            className="w-44 h-44 sm:w-56 sm:h-56 object-contain drop-shadow-[0_15px_30px_rgba(16,104,41,0.25)]"
+            className="w-full h-full object-contain relative z-10 drop-shadow-[0_20px_35px_rgba(16,104,41,0.25)] animate-float"
           />
         </div>
 
-        {/* Customized smooth progress loading bar */}
-        <div className="relative w-48 sm:w-64 h-1.5 bg-brand-green/15 rounded-full overflow-hidden mt-2">
-          <div className="absolute top-0 left-0 h-full bg-brand-green rounded-full animate-loader-progress" />
+        {/* Enhanced Progress Loading Bar */}
+        <div className="relative w-52 sm:w-64 h-2 bg-brand-green/15 rounded-full overflow-hidden shadow-inner">
+          <div className="absolute top-0 left-0 h-full bg-gradient-to-r from-brand-green via-emerald-500 to-brand-yellow rounded-full animate-loader-progress" />
         </div>
 
         {/* Slogan */}
-        <p className="text-xs sm:text-sm tracking-[0.3em] text-brand-green/75 uppercase mt-4 font-display font-bold">
+        <p className="text-xs sm:text-sm tracking-[0.35em] text-brand-green font-extrabold uppercase mt-4 font-display drop-shadow-sm animate-pulse">
           FLAVOURING THE HUNGER
         </p>
+
       </div>
     </div>
   );
