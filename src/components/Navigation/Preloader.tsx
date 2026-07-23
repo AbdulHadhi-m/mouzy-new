@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import mouzyMascot from '../../assets/mouzy_mascot.png';
+import loadingIM from '../../assets/loadingIM.png';
 
 export const Preloader: React.FC = () => {
   const [visible, setVisible] = useState(true);
@@ -31,42 +31,44 @@ export const Preloader: React.FC = () => {
       }`}
       aria-hidden="true"
     >
-      {/* 1. Backdrop typography (Decreased text size for clean fit) */}
+      {/* 1. Backdrop MOUZY Animated Text Fill Loading Effect */}
       <div className="absolute inset-0 flex items-center justify-center select-none pointer-events-none z-0">
-        <span className="text-[12vw] sm:text-[9vw] font-black uppercase tracking-widest font-obelix leading-none text-brand-green/12 animate-pulse">
-          MOUZY
-        </span>
+        <div className="relative font-black uppercase tracking-widest font-obelix leading-[1.4] text-[12vw] sm:text-[9vw] flex items-center justify-center py-8">
+          {/* Base faint background text */}
+          <span className="text-brand-green/10 select-none leading-[1.4] py-8">
+            MOUZY
+          </span>
+
+          {/* Liquid gradient fill overlay text with clip-path (full 100% letter height coverage) */}
+          <span 
+            className="absolute inset-0 flex items-center justify-center bg-gradient-to-r from-brand-green via-emerald-500 to-brand-yellow bg-clip-text text-transparent drop-shadow-[0_4px_25px_rgba(16,104,41,0.35)] select-none font-obelix leading-[1.4] text-[12vw] sm:text-[9vw] tracking-widest uppercase py-8 animate-mouzy-clip-fill"
+            aria-hidden="true"
+          >
+            MOUZY
+          </span>
+        </div>
       </div>
 
-      {/* 2. Main Mascot and Loader Container */}
+      {/* 2. Main Center Loading Image Container */}
       <div className="relative z-10 flex flex-col items-center justify-center px-4 text-center max-w-lg w-full">
         
-        {/* Animated Mascot Container with floating & bounce animation */}
-        <div className="relative mb-6 w-48 sm:w-56 h-48 sm:h-56 flex items-center justify-center">
+        {/* Animated Skateboarding Monkey Image Container (Increased Size) */}
+        <div className="relative w-72 sm:w-96 h-72 sm:h-96 flex items-center justify-center">
           
-          {/* Subtle soft shadow & aura blur */}
-          <div className="absolute bottom-2 left-1/2 -translate-x-1/2 w-32 sm:w-40 h-4 bg-black/15 rounded-full blur-md animate-pulse z-0" />
+          {/* Skateboarding shadow aura */}
+          <div className="absolute bottom-4 left-1/2 -translate-x-1/2 w-48 sm:w-64 h-5 bg-black/20 rounded-full blur-md animate-skate-shadow-slow z-0" />
 
-          {/* Mouzy Mascot Image */}
+          {/* Skateboarding Monkey Action Image (Slow Motion) */}
           <img
-            src={mouzyMascot}
-            alt="Mouzy Mascot"
-            className="w-full h-full object-contain relative z-10 drop-shadow-[0_20px_35px_rgba(16,104,41,0.25)] animate-float"
+            src={loadingIM}
+            alt="Mouzy Skateboarding Loading"
+            className="w-full h-full object-contain relative z-10 drop-shadow-[0_25px_45px_rgba(16,104,41,0.25)] animate-skate-slow"
           />
         </div>
-
-        {/* Enhanced Progress Loading Bar */}
-        <div className="relative w-52 sm:w-64 h-2 bg-brand-green/15 rounded-full overflow-hidden shadow-inner">
-          <div className="absolute top-0 left-0 h-full bg-gradient-to-r from-brand-green via-emerald-500 to-brand-yellow rounded-full animate-loader-progress" />
-        </div>
-
-        {/* Slogan */}
-        <p className="text-xs sm:text-sm tracking-[0.35em] text-brand-green font-extrabold uppercase mt-4 font-display drop-shadow-sm animate-pulse">
-          FLAVOURING THE HUNGER
-        </p>
 
       </div>
     </div>
   );
 };
+
 

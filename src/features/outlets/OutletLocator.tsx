@@ -66,10 +66,10 @@ export const OutletLocator: React.FC = () => {
           </h2>
         </div>
 
-        {/* Banavil Outlets Slider / Cards Container */}
+        {/* Outlets Cards Grid View */}
         <div className="relative px-2 sm:px-4">
           
-          {/* Cards Grid / Slide View */}
+          {/* Cards Grid matching reference layout */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 transition-all duration-500">
             {visibleOutlets.map((outlet) => {
               const cityName = outlet.name.replace(/^Mouzy\s+/i, '');
@@ -77,11 +77,11 @@ export const OutletLocator: React.FC = () => {
               return (
                 <div 
                   key={outlet.id}
-                  className="bg-white shadow-md hover:shadow-xl border border-gray-100/80 rounded-[28px] p-5 sm:p-6 flex flex-col justify-between text-center transition-all duration-300 hover:-translate-y-1 group animate-fade-in"
+                  className="bg-white shadow-sm hover:shadow-md border border-gray-100 rounded-[28px] p-5 sm:p-6 flex flex-col justify-between text-center transition-all duration-300 group"
                 >
                   <div>
-                    {/* Banavil-style soft cream top photo/watermark frame */}
-                    <div className="w-full h-52 sm:h-56 rounded-2xl bg-[#fffdf0] border border-[#f4eed4] flex items-center justify-center p-3 overflow-hidden relative group-hover:bg-[#fff9df] transition-colors duration-300">
+                    {/* Soft cream top photo frame matching reference */}
+                    <div className="w-full h-52 sm:h-56 rounded-2xl bg-[#FFFDE7] border border-[#F4EED4]/60 flex items-center justify-center p-3 overflow-hidden relative">
                       <img 
                         src={outlet.image} 
                         alt={outlet.name} 
@@ -89,24 +89,24 @@ export const OutletLocator: React.FC = () => {
                         loading="lazy"
                         onError={(e) => {
                           (e.currentTarget as HTMLImageElement).src = logoImg;
-                          (e.currentTarget as HTMLImageElement).className = "w-28 h-auto object-contain opacity-40";
+                          (e.currentTarget as HTMLImageElement).className = "w-28 h-auto object-contain opacity-35";
                         }}
                       />
                     </div>
 
-                    {/* Bold City Name (Banavil Style) */}
-                    <h3 className="text-lg font-black text-brand-green-dark font-display uppercase tracking-widest mt-6 text-center">
+                    {/* Bold City Name matching reference */}
+                    <h3 className="text-lg font-black text-brand-green font-display uppercase tracking-wider mt-6 text-center">
                       {cityName}
                     </h3>
 
-                    {/* Address Line (Banavil Style) */}
+                    {/* Address Line matching reference */}
                     <p className="text-xs sm:text-sm text-gray-600 text-center font-medium leading-relaxed mt-2 px-2 min-h-[44px]">
                       {outlet.address}
                     </p>
                   </div>
 
-                  {/* Card Action Buttons */}
-                  <div className="pt-5 mt-4 border-t border-gray-100 flex items-center justify-between gap-3 text-xs">
+                  {/* Clean bottom action links */}
+                  <div className="pt-5 mt-4 border-t border-gray-100/80 flex items-center justify-between gap-3 text-xs">
                     <a 
                       href={`tel:${outlet.phone.replace(/\s+/g, '')}`}
                       className="flex items-center space-x-2 font-bold text-gray-700 hover:text-brand-green transition-colors duration-300"
@@ -124,7 +124,7 @@ export const OutletLocator: React.FC = () => {
                       className="bg-brand-green/10 hover:bg-brand-green hover:text-white text-brand-green font-display font-bold text-[11px] uppercase tracking-wider px-4 py-2 rounded-full transition-all duration-300 flex items-center space-x-1.5"
                     >
                       <i className="fas fa-map-marker-alt" />
-                      <span>Map</span>
+                      <span>MAP</span>
                     </a>
                   </div>
 
@@ -135,7 +135,7 @@ export const OutletLocator: React.FC = () => {
 
         </div>
 
-        {/* Banavil-style Carousel Pagination Dots centered at bottom */}
+        {/* Carousel Pagination Dots */}
         {totalPages > 1 && (
           <div className="flex items-center justify-center space-x-2.5 mt-14">
             {Array.from({ length: totalPages }).map((_, idx) => (
