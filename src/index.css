@@ -277,3 +277,77 @@
   animation: banana-frond-sway-right 4.8s ease-in-out infinite 0.5s;
   transform-origin: 10% 90%;
 }
+
+/* Preloader MOUZY Text Loading Fill Animations (Clip-Path Inset Fix) */
+@keyframes mouzy-clip-reveal {
+  0% {
+    clip-path: inset(-120px 100% -120px -50px);
+  }
+  100% {
+    clip-path: inset(-120px -50px -120px -50px);
+  }
+}
+
+/* Cinematic Slow Motion Skateboarding Monkey Action Keyframes */
+@keyframes skate-action-slow {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg) scale(1);
+  }
+  25% {
+    transform: translateY(-12px) rotate(-3.5deg) scale(1.03);
+  }
+  50% {
+    transform: translateY(3px) rotate(2.5deg) scale(0.99);
+  }
+  75% {
+    transform: translateY(-7px) rotate(-1.5deg) scale(1.015);
+  }
+}
+
+@keyframes skate-shadow-slow {
+  0%, 100% {
+    transform: translateX(-50%) scaleX(1);
+    opacity: 0.18;
+  }
+  25% {
+    transform: translateX(-50%) scaleX(0.75);
+    opacity: 0.35;
+  }
+  50% {
+    transform: translateX(-50%) scaleX(1.05);
+    opacity: 0.15;
+  }
+  75% {
+    transform: translateX(-50%) scaleX(0.85);
+    opacity: 0.3;
+  }
+}
+
+@keyframes text-glow-pulse {
+  0%, 100% {
+    filter: drop-shadow(0 0 12px rgba(16, 104, 41, 0.4));
+  }
+  50% {
+    filter: drop-shadow(0 0 25px rgba(253, 243, 2, 0.7));
+  }
+}
+
+.animate-mouzy-clip-fill {
+  animation: mouzy-clip-reveal 1.5s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+}
+
+.animate-skate-slow {
+  animation: skate-action-slow 2.4s ease-in-out infinite;
+}
+
+.animate-skate-shadow-slow {
+  animation: skate-shadow-slow 2.4s ease-in-out infinite;
+}
+
+.animate-mouzy-glow {
+  animation: text-glow-pulse 2s ease-in-out infinite;
+}
+
+
+
+
