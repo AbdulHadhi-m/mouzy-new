@@ -1,5 +1,6 @@
 import React from 'react';
 import logoImg from '../../assets/logo.png';
+import zywoLogo from '../../assets/Zywo logo white.png';
 
 export const Footer: React.FC = () => {
   const handleLinkClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
@@ -27,8 +28,8 @@ export const Footer: React.FC = () => {
             </p>
           </div>
 
-          {/* Quick Links Column */}
-          <div className="flex flex-col items-start space-y-4">
+          {/* Quick Links Column (Hidden on mobile phone view per user request) */}
+          <div className="hidden md:flex flex-col items-start space-y-4">
             <h3 className="text-base font-extrabold font-display text-white tracking-wider uppercase">
               Quick Links
             </h3>
@@ -149,15 +150,22 @@ export const Footer: React.FC = () => {
         {/* Copyright Row */}
         <div className="flex flex-col md:flex-row items-center justify-between text-xs text-gray-500 space-y-4 md:space-y-0">
           <p>© {new Date().getFullYear()} Mouzy. All rights reserved.</p>
-          <p>
-            Powered by{' '}
+          <p className="flex items-center space-x-2">
+            <span className="text-gray-400 font-medium">Powered by</span>
             <a 
-              href="https://mouzy.in/" 
+              href="https://zywo.in" 
               target="_blank" 
               rel="noopener noreferrer" 
-              className="text-gray-400 hover:text-brand-yellow-warm transition-colors"
+              className="inline-flex items-center space-x-2 hover:opacity-80 transition-opacity"
             >
-              CCinfotech
+              <img 
+                src={zywoLogo} 
+                alt="ZYWO Logo" 
+                className="h-5 sm:h-6 w-auto object-contain" 
+              />
+              <span className="text-white font-extrabold tracking-widest text-sm uppercase">
+                ZYWO
+              </span>
             </a>
           </p>
         </div>

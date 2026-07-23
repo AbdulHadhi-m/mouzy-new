@@ -4,9 +4,7 @@ import { Navbar } from './components/Navigation/Navbar';
 import { HeroSlider } from './features/hero/HeroSlider';
 import { AboutSection } from './features/about/AboutSection';
 import { ProductsBanner } from './features/products/ProductsBanner';
-import { ProductCatalog } from './features/products/ProductCatalog';
 import { OutletLocator } from './features/outlets/OutletLocator';
-import { GuestsSection } from './features/guests/GuestsSection';
 import { FranchiseBanner } from './features/franchise/FranchiseBanner';
 import { Footer } from './components/Navigation/Footer';
 import { Modal } from './components/Modal';
@@ -60,7 +58,7 @@ const App: React.FC = () => {
   };
 
   return (
-    <div className="relative min-h-screen flex flex-col justify-between">
+    <div className="relative min-h-screen flex flex-col justify-between overflow-x-hidden w-full max-w-full">
       {/* 1. Preloader Screen */}
       <Preloader />
 
@@ -75,17 +73,11 @@ const App: React.FC = () => {
         {/* 4. About Us Feature */}
         <AboutSection />
 
-        {/* 5. Products Transition Banner */}
+        {/* 5. Products Scooter Scroll Transition Banner */}
         <ProductsBanner />
 
-        {/* 6. Product Catalog & Anatomy Feature */}
-        <ProductCatalog />
-
-        {/* 7. Outlets Locator Feature */}
+        {/* 6. Outlets Locator Feature */}
         <OutletLocator />
-
-        {/* 8. Social Proof Reviews Feature */}
-        <GuestsSection />
 
         {/* 8. Franchise Call-To-Action Banner Feature */}
         <FranchiseBanner onApplyClick={() => setIsModalOpen(true)} />

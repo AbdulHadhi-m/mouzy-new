@@ -112,3 +112,168 @@
 ::-webkit-scrollbar-thumb:hover {
   @apply bg-brand-green/80;
 }
+
+/* Funny Monkey Running Animations */
+@keyframes monkey-run-bounce {
+  0%, 100% { transform: translateY(0) rotate(-6deg); }
+  25% { transform: translateY(-16px) rotate(6deg); }
+  50% { transform: translateY(-3px) rotate(-5deg); }
+  75% { transform: translateY(-18px) rotate(5deg); }
+}
+
+@keyframes monkey-sprint-across {
+  0% { transform: translateX(-180px); }
+  50% { transform: translateX(0px); }
+  100% { transform: translateX(180px); }
+}
+
+.animate-monkey-run {
+  animation: monkey-run-bounce 0.3s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+
+.animate-monkey-across {
+  animation: monkey-sprint-across 2.5s ease-in-out infinite alternate;
+}
+
+/* Animated SVG Monkey Character Running Limbs Keyframes */
+@keyframes monkey-leg-run-a {
+  0% { transform: rotate(-40deg); }
+  100% { transform: rotate(40deg); }
+}
+
+@keyframes monkey-leg-run-b {
+  0% { transform: rotate(40deg); }
+  100% { transform: rotate(-40deg); }
+}
+
+@keyframes monkey-arm-run-a {
+  0% { transform: rotate(45deg); }
+  100% { transform: rotate(-35deg); }
+}
+
+@keyframes monkey-arm-run-b {
+  0% { transform: rotate(-35deg); }
+  100% { transform: rotate(45deg); }
+}
+
+@keyframes monkey-tail-sway {
+  0%, 100% { transform: rotate(-12deg); }
+  50% { transform: rotate(18deg); }
+}
+
+.anim-leg-a {
+  animation: monkey-leg-run-a 0.22s ease-in-out infinite alternate;
+  transform-origin: 50% 15%;
+}
+.anim-leg-b {
+  animation: monkey-leg-run-b 0.22s ease-in-out infinite alternate;
+  transform-origin: 50% 15%;
+}
+.anim-arm-a {
+  animation: monkey-arm-run-a 0.22s ease-in-out infinite alternate;
+  transform-origin: 50% 15%;
+}
+.anim-arm-b {
+  animation: monkey-arm-run-b 0.22s ease-in-out infinite alternate;
+  transform-origin: 50% 15%;
+}
+.anim-tail {
+  animation: monkey-tail-sway 0.35s ease-in-out infinite;
+  transform-origin: 10% 90%;
+}
+
+/* Animated Landscape & Particles Keyframes */
+@keyframes cloud-drift-a {
+  0% { transform: translateX(-20%); }
+  100% { transform: translateX(120%); }
+}
+
+@keyframes cloud-drift-b {
+  0% { transform: translateX(-30%); }
+  100% { transform: translateX(130%); }
+}
+
+@keyframes float-leaf-sway-a {
+  0%, 100% { transform: translateY(0px) rotate(0deg) scale(1); }
+  50% { transform: translateY(-25px) rotate(25deg) scale(1.08); }
+}
+
+@keyframes float-leaf-sway-b {
+  0%, 100% { transform: translateY(0px) rotate(0deg) scale(1); }
+  50% { transform: translateY(20px) rotate(-20deg) scale(0.95); }
+}
+
+@keyframes light-ray-pulse {
+  0%, 100% { opacity: 0.25; transform: scale(1) rotate(0deg); }
+  50% { opacity: 0.55; transform: scale(1.06) rotate(3deg); }
+}
+
+@keyframes particle-shimmer {
+  0%, 100% { opacity: 0.2; transform: translateY(0) scale(0.8); }
+  50% { opacity: 0.9; transform: translateY(-20px) scale(1.3); }
+}
+
+.animate-cloud-slow {
+  animation: cloud-drift-a 55s linear infinite;
+}
+
+.animate-cloud-fast {
+  animation: cloud-drift-b 35s linear infinite;
+}
+
+.animate-leaf-sway-1 {
+  animation: float-leaf-sway-a 6.5s ease-in-out infinite;
+}
+
+.animate-leaf-sway-2 {
+  animation: float-leaf-sway-b 8.5s ease-in-out infinite 1.5s;
+}
+
+.animate-light-ray {
+  animation: light-ray-pulse 7s ease-in-out infinite;
+}
+
+.animate-particle {
+  animation: particle-shimmer 4s ease-in-out infinite;
+}
+
+/* Tropical Banana Plantation Animations */
+@keyframes bird-fly-a {
+  0% { transform: translate(-10%, 0) scale(0.7); }
+  50% { transform: translate(55vw, -20px) scale(1); }
+  100% { transform: translate(110vw, 10px) scale(0.85); }
+}
+
+@keyframes banana-tree-sway {
+  0%, 100% { transform: rotate(0deg); }
+  50% { transform: rotate(2.5deg); }
+}
+
+.animate-birds-fly {
+  animation: bird-fly-a 26s linear infinite;
+}
+
+.animate-tree-sway {
+  animation: banana-tree-sway 5s ease-in-out infinite;
+  transform-origin: bottom center;
+}
+
+@keyframes banana-frond-sway-left {
+  0%, 100% { transform: rotate(0deg); }
+  50% { transform: rotate(-3.5deg) translateY(-2px); }
+}
+
+@keyframes banana-frond-sway-right {
+  0%, 100% { transform: rotate(0deg); }
+  50% { transform: rotate(4deg) translateY(-3px); }
+}
+
+.animate-frond-left {
+  animation: banana-frond-sway-left 4.2s ease-in-out infinite;
+  transform-origin: 90% 90%;
+}
+
+.animate-frond-right {
+  animation: banana-frond-sway-right 4.8s ease-in-out infinite 0.5s;
+  transform-origin: 10% 90%;
+}
