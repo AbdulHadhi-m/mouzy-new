@@ -2,24 +2,25 @@ import React, { useState, useEffect } from 'react';
 import logoImg from '../../assets/logo.png';
 
 interface NavbarProps {
-  onFranchiseClick: () => void;
+  onContactClick: () => void;
+  onNavigateHome: (href?: string) => void;
+  currentPage: 'home' | 'contact';
 }
 
-export const Navbar: React.FC<NavbarProps> = ({ onFranchiseClick }) => {
+export const Navbar: React.FC<NavbarProps> = ({ onContactClick, onNavigateHome, currentPage }) => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
-      // Trigger yellow scrolled navbar ONLY when scrolling past the full Hero page (second section)
       const heroHeight = window.innerHeight - 100;
-      setIsScrolled(window.scrollY > heroHeight);
+      setIsScrolled(window.scrollY > heroHeight || currentPage === 'contact');
     };
 
     handleScroll();
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+  }, [currentPage]);
 
   const navLinks = [
     { label: 'Home', href: '#home' },
@@ -31,16 +32,15 @@ export const Navbar: React.FC<NavbarProps> = ({ onFranchiseClick }) => {
   const handleLinkClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
     e.preventDefault();
     setIsMobileMenuOpen(false);
-    const target = document.querySelector(href);
-    if (target) {
-      target.scrollIntoView({ behavior: 'smooth' });
-    }
+    onNavigateHome(href);
   };
+
+  const isScrolledHeader = isScrolled || currentPage === 'contact';
 
   return (
     <header 
       className={`fixed top-0 left-0 right-0 z-40 transition-all duration-500 ${
-        isScrolled 
+        isScrolledHeader 
           ? 'bg-[#fef200] shadow-md border-b border-black/5 py-3' 
           : 'bg-transparent py-5'
       }`}
@@ -49,13 +49,17 @@ export const Navbar: React.FC<NavbarProps> = ({ onFranchiseClick }) => {
         <div className="flex items-center justify-between">
           
           {/* Logo Left */}
-          <a href="#home" className="flex items-center focus:outline-none animate-fade-in" aria-label="Mouzy Home">
+          <button 
+            onClick={() => onNavigateHome('#home')} 
+            className="flex items-center focus:outline-none animate-fade-in outline-none border-none cursor-pointer" 
+            aria-label="Mouzy Home"
+          >
             <img 
               src={logoImg} 
               alt="Mouzy Logo" 
               className="h-16 sm:h-20 w-auto object-contain py-1" 
             />
-          </a>
+          </button>
 
           {/* Centered Navigation Links */}
           <nav className="hidden lg:flex items-center space-x-10 absolute left-1/2 -translate-x-1/2" aria-label="Main Navigation">
@@ -65,14 +69,14 @@ export const Navbar: React.FC<NavbarProps> = ({ onFranchiseClick }) => {
                 href={link.href}
                 onClick={(e) => handleLinkClick(e, link.href)}
                 className={`text-sm font-extrabold tracking-wide transition-all duration-300 relative group ${
-                  isScrolled 
+                  isScrolledHeader 
                     ? 'text-brand-green-dark hover:text-brand-green' 
                     : 'text-white hover:text-brand-yellow-warm'
                 }`}
               >
                 {link.label}
                 <span className={`absolute bottom-[-4px] left-0 w-0 h-[2.5px] transition-all duration-300 group-hover:w-full ${
-                  isScrolled ? 'bg-brand-green-dark' : 'bg-brand-yellow-warm'
+                  isScrolledHeader ? 'bg-brand-green-dark' : 'bg-brand-yellow-warm'
                 }`} />
               </a>
             ))}
@@ -81,9 +85,9 @@ export const Navbar: React.FC<NavbarProps> = ({ onFranchiseClick }) => {
           {/* Contact CTA Button (Right) */}
           <div className="hidden lg:block">
             <button 
-              onClick={onFranchiseClick}
+              onClick={onContactClick}
               className={`px-7 py-2.5 rounded-full font-bold text-sm transition-all duration-300 active:scale-95 outline-none focus:outline-none shadow-md ${
-                isScrolled
+                isScrolledHeader
                   ? 'bg-brand-green text-white hover:bg-brand-green-dark'
                   : 'bg-brand-yellow text-brand-green-dark hover:bg-white'
               }`}
@@ -96,7 +100,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onFranchiseClick }) => {
           <button
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
             className={`lg:hidden p-2 transition-colors duration-300 ${
-              isScrolled ? 'text-brand-green-dark' : 'text-white'
+              isScrolledHeader ? 'text-brand-green-dark' : 'text-white'
             }`}
             aria-expanded={isMobileMenuOpen}
             aria-label="Toggle mobile navigation menu"
@@ -120,8 +124,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onFranchiseClick }) => {
                 key={link.label}
                 onClick={() => {
                   setIsMobileMenuOpen(false);
-                  const target = document.querySelector(link.href);
-                  target?.scrollIntoView({ behavior: 'smooth' });
+                  onNavigateHome(link.href);
                 }}
                 className="text-xl font-bold font-display text-white/95 hover:text-brand-yellow-warm transition-colors duration-300"
               >
@@ -132,7 +135,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onFranchiseClick }) => {
             <button 
               onClick={() => {
                 setIsMobileMenuOpen(false);
-                onFranchiseClick();
+                onContactClick();
               }}
               className="mt-6 bg-brand-yellow text-brand-green-dark px-8 py-3 rounded-full font-bold text-base hover:bg-white transition-all duration-300"
             >

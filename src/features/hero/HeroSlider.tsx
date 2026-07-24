@@ -12,16 +12,16 @@ export const HeroSlider: React.FC = () => {
 
   const slides = [
     {
-      id: 'strawberry',
-      image: cup1,
-      bgText: 'STRAWBERRY',
-      title: 'Fresh Strawberry Avil Milk',
-    },
-    {
       id: 'mango',
       image: cup2,
       bgText: 'MANGO',
       title: 'Juicy Mango Avil Milk',
+    },
+    {
+      id: 'strawberry',
+      image: cup1,
+      bgText: 'STRAWBERRY',
+      title: 'Fresh Strawberry Avil Milk',
     },
     {
       id: 'chocolate',

@@ -153,7 +153,7 @@ export const ProductsBanner: React.FC = () => {
   const currentProduct = products[currentStep];
 
   return (
-    <div ref={triggerRef} id="products-banner" className="relative w-full bg-[#37B249]">
+    <div ref={triggerRef} id="items" className="relative w-full bg-[#37B249]">
       <div 
         ref={pinRef}
         className="relative w-full h-screen min-h-[640px] bg-[#37B249] overflow-hidden flex flex-col justify-between transform-gpu"
