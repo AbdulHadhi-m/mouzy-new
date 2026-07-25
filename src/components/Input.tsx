@@ -4,6 +4,7 @@ interface InputProps extends React.InputHTMLAttributes<HTMLInputElement | HTMLTe
   label: string;
   textarea?: boolean;
   rows?: number;
+  icon?: string;
 }
 
 export const Input: React.FC<InputProps> = ({
@@ -11,15 +12,17 @@ export const Input: React.FC<InputProps> = ({
   id,
   textarea = false,
   className = '',
-  rows = 4,
+  rows = 3,
+  icon,
   ...props
 }) => {
-  const inputStyles = 'w-full px-4 py-3 bg-brand-green-deep/60 border border-white/10 rounded-xl text-white placeholder-white/40 focus:border-brand-yellow-warm/60 focus:bg-brand-green-deep/80 transition-all duration-300 outline-none text-sm';
+  const inputStyles = 'w-full px-4 py-3 bg-white border-2 border-[#106829]/30 rounded-[1.25rem_0.5rem_1.5rem_0.75rem] text-[#083c16] placeholder-gray-400 font-medium focus:border-[#106829] focus:ring-2 focus:ring-[#106829]/20 focus:bg-white transition-all duration-300 outline-none text-sm shadow-sm';
 
   return (
     <div className="mb-4 text-left">
-      <label htmlFor={id} className="block text-xs font-semibold text-brand-cream-dark mb-1 font-display tracking-wider uppercase">
-        {label}
+      <label htmlFor={id} className="flex items-center gap-1.5 text-xs font-bold text-[#106829] mb-1.5 font-display tracking-wider uppercase">
+        {icon && <i className={`${icon} text-[#106829] text-xs`} />}
+        <span>{label}</span>
       </label>
       {textarea ? (
         <textarea

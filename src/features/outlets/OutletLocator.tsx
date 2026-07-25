@@ -105,29 +105,6 @@ export const OutletLocator: React.FC = () => {
                     </p>
                   </div>
 
-                  {/* Clean bottom action links */}
-                  <div className="pt-5 mt-4 border-t border-gray-100/80 flex items-center justify-between gap-3 text-xs">
-                    <a 
-                      href={`tel:${outlet.phone.replace(/\s+/g, '')}`}
-                      className="flex items-center space-x-2 font-bold text-gray-700 hover:text-brand-green transition-colors duration-300"
-                    >
-                      <div className="w-7 h-7 rounded-full bg-brand-green/10 flex items-center justify-center text-brand-green">
-                        <i className="fas fa-phone-alt text-xs" />
-                      </div>
-                      <span>{outlet.phone}</span>
-                    </a>
-                    
-                    <a 
-                      href={outlet.mapLink}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="bg-brand-green/10 hover:bg-brand-green hover:text-white text-brand-green font-display font-bold text-[11px] uppercase tracking-wider px-4 py-2 rounded-full transition-all duration-300 flex items-center space-x-1.5"
-                    >
-                      <i className="fas fa-map-marker-alt" />
-                      <span>MAP</span>
-                    </a>
-                  </div>
-
                 </div>
               );
             })}

@@ -1,4 +1,5 @@
 import React, { useEffect, useRef } from 'react';
+import logoImg from '../assets/logo.png';
 
 interface ModalProps {
   isOpen: boolean;
@@ -19,8 +20,6 @@ export const Modal: React.FC<ModalProps> = ({ isOpen, onClose, title, children }
     if (isOpen) {
       document.body.style.overflow = 'hidden';
       window.addEventListener('keydown', handleKeyDown);
-      
-      // Focus the modal itself or first interactive element
       modalRef.current?.focus();
     }
 
@@ -34,41 +33,47 @@ export const Modal: React.FC<ModalProps> = ({ isOpen, onClose, title, children }
 
   return (
     <div 
-      className="fixed inset-0 z-50 flex items-center justify-center p-4"
+      className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 overflow-y-auto"
       role="dialog"
       aria-modal="true"
       aria-labelledby="modal-title"
     >
-      {/* Backdrop overlay */}
+      {/* Backdrop overlay with blur */}
       <div 
-        className="absolute inset-0 bg-brand-green-black/85 backdrop-blur-sm transition-opacity duration-300"
+        className="fixed inset-0 bg-[#04170a]/85 backdrop-blur-md transition-opacity duration-300"
         onClick={onClose}
       />
 
-      {/* Modal Content container */}
+      {/* Unshaped Random Organic Modal Container in #FEFAD3 */}
       <div 
         ref={modalRef}
         tabIndex={-1}
-        className="relative w-full max-w-lg glass-panel rounded-3xl p-6 md:p-8 border border-white/10 shadow-2xl focus:outline-none animate-slide-up"
+        className="relative w-full max-w-lg my-auto bg-[#FEFAD3] text-[#083c16] p-6 sm:p-8 border-4 border-[#106829] shadow-[0_25px_80px_rgba(16,104,41,0.35)] focus:outline-none animate-slide-up transition-all duration-300 rounded-[3rem_1.25rem_4rem_1.5rem] sm:rounded-[4.5rem_1.5rem_5.5rem_2rem] overflow-hidden"
       >
-        {/* Close Button */}
+        {/* Decorative background subtle ambient glows */}
+        <div className="absolute -top-24 -right-24 w-60 h-60 bg-[#106829]/10 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute -bottom-20 -left-20 w-56 h-56 bg-[#FFF200]/40 rounded-full blur-2xl pointer-events-none" />
+
+        {/* Unshaped Styled Close Button */}
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 text-white/50 hover:text-white transition-colors duration-300 w-8 h-8 rounded-full flex items-center justify-center hover:bg-white/5 text-xl"
+          className="absolute top-4 right-4 text-white bg-[#106829] hover:bg-[#FFF200] hover:text-[#106829] transition-all duration-300 w-9 h-9 rounded-[14px_6px_14px_6px] flex items-center justify-center text-xl font-bold border border-[#106829]/30 z-30 shadow-md transform hover:scale-105 active:scale-95"
           aria-label="Close modal"
         >
           &times;
         </button>
 
-        {/* Title */}
-        <div className="text-center mb-6">
-          <h2 id="modal-title" className="text-2xl font-bold font-display uppercase tracking-wide">
+        {/* Title Header with Logo & Typography */}
+        <div className="text-center pt-2 mb-6 relative z-10">
+          <img src={logoImg} alt="Mouzy" className="w-14 sm:w-16 h-auto mx-auto mb-2 drop-shadow-sm" />
+          <h2 id="modal-title" className="text-xl sm:text-2xl font-black font-display uppercase tracking-wide text-[#106829] drop-shadow-sm leading-tight px-2">
             {title}
           </h2>
+          <div className="w-24 h-1 bg-gradient-to-r from-transparent via-[#106829] to-transparent mx-auto mt-2 rounded-full" />
         </div>
 
         {/* Inner Content */}
-        <div>{children}</div>
+        <div className="relative z-10">{children}</div>
       </div>
     </div>
   );

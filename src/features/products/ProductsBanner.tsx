@@ -29,7 +29,6 @@ export const ProductsBanner: React.FC = () => {
   const bgSkyRef = useRef<HTMLDivElement>(null);
   const bgHillsRef = useRef<HTMLDivElement>(null);
   const bgTreesRef = useRef<HTMLDivElement>(null);
-  const fgLeavesRef = useRef<HTMLDivElement>(null);
 
   const [currentStep, setCurrentStep] = useState(0);
   const currentStepRef = useRef(0);
@@ -84,12 +83,12 @@ export const ProductsBanner: React.FC = () => {
     if (!triggerEl || !pinEl) return;
 
     const ctx = gsap.context(() => {
-      // 1. Create a pure GSAP Timeline for silky 60-120 FPS scrubbing
+      // 1. GSAP ScrollTrigger timeline with precise pinning & spacing calculation
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: triggerEl,
           start: 'top top',
-          end: '+=240%',
+          end: '+=220%',
           pin: pinEl,
           pinSpacing: true,
           scrub: 0.5,
@@ -98,17 +97,16 @@ export const ProductsBanner: React.FC = () => {
           onUpdate: (self) => {
             const p = self.progress;
             let step = 0;
-            if (p >= 0.80) {
+            if (p >= 0.75) {
               step = 3;
             } else if (p >= 0.50) {
               step = 2;
-            } else if (p >= 0.20) {
+            } else if (p >= 0.25) {
               step = 1;
             } else {
               step = 0;
             }
 
-            // Only update React state when step changes
             if (step !== currentStepRef.current) {
               currentStepRef.current = step;
               setCurrentStep(step);
@@ -117,31 +115,30 @@ export const ProductsBanner: React.FC = () => {
         }
       });
 
-      // 2. Hardware-accelerated GPU timeline animations (Zero JS scroll overhead!)
+      // 2. Parallax background vector layer animations
       if (bgTreesRef.current) {
-        tl.to(bgTreesRef.current, { x: -650, ease: 'none' }, 0);
+        tl.to(bgTreesRef.current, { x: -700, ease: 'none' }, 0);
       }
       if (bgHillsRef.current) {
         tl.to(bgHillsRef.current, { x: -300, ease: 'none' }, 0);
       }
       if (bgSkyRef.current) {
-        tl.to(bgSkyRef.current, { x: -100, ease: 'none' }, 0);
-      }
-      if (fgLeavesRef.current) {
-        tl.to(fgLeavesRef.current, { x: 450, ease: 'none' }, 0);
+        tl.to(bgSkyRef.current, { x: 350, ease: 'none' }, 0);
       }
 
-      // Refresh ScrollTrigger to recalculate exact offsets after assets render
+      // Refresh ScrollTrigger after DOM renders & images load to prevent layout glitches
       const timer = setTimeout(() => {
         ScrollTrigger.refresh();
       }, 300);
 
-      const handleLoad = () => ScrollTrigger.refresh();
-      window.addEventListener('load', handleLoad);
+      const handleRefresh = () => ScrollTrigger.refresh();
+      window.addEventListener('load', handleRefresh);
+      window.addEventListener('resize', handleRefresh);
 
       return () => {
         clearTimeout(timer);
-        window.removeEventListener('load', handleLoad);
+        window.removeEventListener('load', handleRefresh);
+        window.removeEventListener('resize', handleRefresh);
       };
     });
 
@@ -153,7 +150,7 @@ export const ProductsBanner: React.FC = () => {
   const currentProduct = products[currentStep];
 
   return (
-    <div ref={triggerRef} id="products-banner" className="relative w-full bg-[#37B249]">
+    <div ref={triggerRef} id="items" className="relative w-full bg-[#37B249]">
       <div 
         ref={pinRef}
         className="relative w-full h-screen min-h-[640px] bg-[#37B249] overflow-hidden flex flex-col justify-between transform-gpu"
@@ -166,48 +163,40 @@ export const ProductsBanner: React.FC = () => {
         {/* ------------------------------------------------------------- */}
         {/* 1. VECTOR LAYER: Sunburst Light Rays & Radial Atmosphere       */}
         {/* ------------------------------------------------------------- */}
-        <div className="absolute top-0 left-1/4 -translate-x-1/2 w-[1100px] h-[750px] pointer-events-none z-0 animate-light-ray">
+        <div className="absolute top-0 left-1/4 -translate-x-1/2 w-[1100px] h-[750px] pointer-events-none z-0">
           <div className="w-full h-full bg-gradient-to-b from-[#FACC15]/30 via-[#4ADE80]/20 to-transparent blur-2xl rounded-full transform -rotate-12" />
         </div>
 
         {/* Glowing Sun Circle */}
-        <div className="absolute top-36 left-16 w-28 h-28 rounded-full bg-gradient-to-br from-[#FFF200] to-[#FACC15] blur-sm opacity-85 z-0 shadow-[0_0_80px_#FACC15]" />
+        <div className="absolute top-28 sm:top-36 left-8 sm:left-16 w-24 sm:w-28 h-24 sm:h-28 rounded-full bg-gradient-to-br from-[#FFF200] to-[#FACC15] blur-sm opacity-85 z-0 shadow-[0_0_80px_#FACC15]" />
 
         {/* ------------------------------------------------------------- */}
-        {/* 2. VECTOR LAYER: Flying Birds & Drifting Clouds                 */}
+        {/* 2. VECTOR LAYER: Drifting Clouds                               */}
         {/* ------------------------------------------------------------- */}
-        <div className="absolute top-36 left-0 w-full z-10 pointer-events-none overflow-hidden h-28">
+        <div className="absolute top-28 sm:top-36 left-0 w-full z-10 pointer-events-none overflow-hidden h-28">
           <div 
             ref={bgSkyRef}
-            className="animate-birds-fly flex items-center space-x-9 text-[#FACC15]/90 will-change-transform transform-gpu"
+            className="w-[2000px] flex items-center justify-between px-12 opacity-80 will-change-transform transform-gpu"
           >
-            <svg className="w-8 h-8 fill-current drop-shadow-sm" viewBox="0 0 24 24">
-              <path d="M2.5 12c3-4.5 6-4.5 9.5 0c3.5-4.5 6.5-4.5 9.5 0c-3 2-6 2-9.5-1.5c-3.5 3.5-6.5 3.5-9.5 1.5z"/>
-            </svg>
-            <svg className="w-5 h-5 fill-current opacity-80 transform -translate-y-3" viewBox="0 0 24 24">
-              <path d="M2.5 12c3-4.5 6-4.5 9.5 0c3.5-4.5 6.5-4.5 9.5 0c-3 2-6 2-9.5-1.5c-3.5 3.5-6.5 3.5-9.5 1.5z"/>
-            </svg>
-            <svg className="w-6 h-6 fill-current opacity-95 transform translate-y-1" viewBox="0 0 24 24">
-              <path d="M2.5 12c3-4.5 6-4.5 9.5 0c3.5-4.5 6.5-4.5 9.5 0c-3 2-6 2-9.5-1.5c-3.5 3.5-6.5 3.5-9.5 1.5z"/>
-            </svg>
-          </div>
-        </div>
-
-        {/* Drifting Vector Clouds */}
-        <div className="absolute inset-x-0 top-36 z-0 opacity-35 pointer-events-none overflow-hidden h-36">
-          <div className="absolute top-2 left-0 w-[500px] h-28 animate-cloud-slow">
-            <svg viewBox="0 0 300 80" fill="#F8FAFC" className="w-full h-full">
-              <path d="M 30 60 Q 10 60 10 40 Q 10 20 30 20 Q 40 5 65 5 Q 90 5 95 20 Q 110 10 130 20 Q 185 30 185 50 Q 185 60 165 60 Z" />
-            </svg>
+            <div className="flex items-center space-x-16">
+              <svg className="w-36 h-20 fill-white/80 drop-shadow-sm" viewBox="0 0 200 100">
+                <path d="M 30 60 Q 10 60 10 40 Q 10 20 30 20 Q 40 5 65 5 Q 90 5 95 20 Q 110 10 130 20 Q 185 30 185 50 Q 185 60 165 60 Z" />
+              </svg>
+            </div>
+            <div className="flex items-center space-x-24">
+              <svg className="w-48 h-24 fill-white/90 drop-shadow-md" viewBox="0 0 200 100">
+                <path d="M 30 60 Q 10 60 10 40 Q 10 20 30 20 Q 40 5 65 5 Q 90 5 95 20 Q 110 10 130 20 Q 185 30 185 50 Q 185 60 165 60 Z" />
+              </svg>
+            </div>
           </div>
         </div>
 
         {/* ------------------------------------------------------------- */}
-        {/* 3. VECTOR LAYER: Ultra-Wide 3D Rolling Hills Panorama          */}
+        {/* 3. VECTOR LAYER: Panorama Hills                                */}
         {/* ------------------------------------------------------------- */}
         <div 
           ref={bgHillsRef}
-          className="absolute inset-x-0 bottom-0 z-0 opacity-45 pointer-events-none will-change-transform transform-gpu"
+          className="absolute inset-x-0 bottom-0 z-0 opacity-50 pointer-events-none will-change-transform transform-gpu"
         >
           <svg viewBox="0 0 2400 180" className="w-[2400px] h-36 fill-[#063e2d]">
             <path d="M 0 180 Q 300 60 600 140 Q 900 40 1200 120 Q 1500 50 1800 140 Q 2100 70 2400 180 Z" />
@@ -216,303 +205,145 @@ export const ProductsBanner: React.FC = () => {
         </div>
 
         {/* ------------------------------------------------------------- */}
-        {/* 4. VECTOR LAYER: Extended 6-Tree Ultra-Detailed 3D Banana Grove */}
+        {/* 4. VECTOR LAYER: Sleek Smooth Banana Palm Grove                */}
         {/* ------------------------------------------------------------- */}
         <div 
           ref={bgTreesRef}
-          className="absolute bottom-0 z-0 opacity-95 pointer-events-none w-[2500px] flex justify-between px-4 will-change-transform transform-gpu"
+          className="absolute -bottom-12 z-0 opacity-45 pointer-events-none w-[2800px] flex justify-between px-2 will-change-transform transform-gpu"
         >
-          {/* Tree 1 (Far Left - Ultra Detailed with Abundant Bananas) */}
-          <div className="w-84 sm:w-96 h-96 relative animate-tree-sway">
-            <svg viewBox="0 0 420 420" className="w-full h-full drop-shadow-md">
-              {/* Pseudostem Trunk */}
-              <path d="M 210 420 C 216 290 204 200 222 135 C 226 200 230 290 238 420 Z" fill="#4A2E1B" stroke="#25150B" strokeWidth="3.5" />
-              <path d="M 213 340 C 222 315 230 315 235 340" fill="none" stroke="#25150B" strokeWidth="2.5" />
-              <path d="M 215 270 C 223 245 228 245 234 270" fill="none" stroke="#25150B" strokeWidth="2.5" />
+          {[0, 1, 2, 3, 4].map((idx) => (
+            <div key={idx} className="w-80 sm:w-96 h-[520px] relative overflow-visible">
+              <svg viewBox="0 0 420 520" className="w-full h-full overflow-visible drop-shadow-xl">
+                {/* Flared Root Base & Sleek Tapered Light Green Trunk */}
+                <path d="M 165 520 C 185 450 195 300 208 115 L 222 115 C 230 300 240 450 260 520 Z" fill="#84CC16" stroke="#4ADE80" strokeWidth="2" />
+                {/* Trunk Shadow Edge */}
+                <path d="M 215 115 C 223 300 230 450 260 520 L 245 520 C 230 450 222 300 208 115 Z" fill="#65A30D" />
+                
+                {/* 1. TOP ERECT LEAF */}
+                <g>
+                  <path d="M 210 115 C 190 60 210 10 270 5 C 290 35 295 70 275 105 L 210 115 Z" fill="#84CC16" stroke="#4ADE80" strokeWidth="2" />
+                  <path d="M 210 115 Q 240 55 270 5" stroke="#FACC15" strokeWidth="3" fill="none" />
+                  <path d="M 225 90 L 245 75 M 240 60 L 260 45" stroke="#BEF264" strokeWidth="1" opacity="0.6" />
+                </g>
 
-              {/* Fronds */}
-              <g className="animate-frond-left">
-                <path d="M 222 135 C 150 50 50 55 10 120 C 70 112 145 120 222 135 Z" fill="#4ADE80" stroke="#10B981" strokeWidth="3" />
-                <path d="M 222 135 C 150 50 50 55 10 120" fill="none" stroke="#86EFAC" strokeWidth="2.5" strokeDasharray="6 3" />
-              </g>
-              <g className="animate-frond-left" style={{ animationDelay: '0.3s' }}>
-                <path d="M 222 135 C 165 30 70 0 10 40 C 70 48 145 85 222 135 Z" fill="#84CC16" stroke="#10B981" strokeWidth="3" />
-                <path d="M 222 135 C 165 30 70 0 10 40" fill="none" stroke="#FEF08A" strokeWidth="2.5" />
-              </g>
-              <g className="animate-frond-right">
-                <path d="M 222 135 C 280 30 370 0 420 40 C 360 48 290 85 222 135 Z" fill="#4ADE80" stroke="#10B981" strokeWidth="3" />
-                <path d="M 222 135 C 280 30 370 0 420 40" fill="none" stroke="#86EFAC" strokeWidth="2.5" />
-              </g>
+                {/* 2. TOP RIGHT LEAF */}
+                <g>
+                  <path d="M 215 115 C 260 80 340 50 395 75 C 380 110 330 135 275 130 L 215 115 Z" fill="#4ADE80" stroke="#22C55E" strokeWidth="2" />
+                  <path d="M 215 115 Q 315 90 395 75" stroke="#FEF08A" strokeWidth="3" fill="none" />
+                </g>
 
-              {/* Dense Multi-Tier Heavy Yellow Banana Bunch */}
-              <g transform="translate(206, 138)">
-                <path d="M 16 -5 Q 20 20 16 40 Q 12 70 16 120" fill="none" stroke="#65A30D" strokeWidth="6" strokeLinecap="round" />
-                {/* Tier 1 */}
-                <g transform="translate(0, 10)">
-                  <path d="M -26 0 C -48 24 -52 55 -30 80 C -18 55 -18 28 -26 0 Z" fill="#FFF200" stroke="#CA8A04" strokeWidth="2.5" />
-                  <path d="M -12 0 C -30 28 -34 60 -18 85 C -6 60 -6 30 -12 0 Z" fill="#FACC15" stroke="#CA8A04" strokeWidth="2.5" />
-                  <path d="M 12 0 C 30 28 34 60 18 85 C 6 60 6 30 12 0 Z" fill="#FFF200" stroke="#CA8A04" strokeWidth="2.5" />
-                  <path d="M 26 0 C 48 24 52 55 30 80 C 18 55 18 28 26 0 Z" fill="#FACC15" stroke="#CA8A04" strokeWidth="2.5" />
+                {/* 3. TOP LEFT LEAF */}
+                <g>
+                  <path d="M 205 115 C 160 80 80 50 25 75 C 40 110 90 135 145 130 L 205 115 Z" fill="#84CC16" stroke="#4ADE80" strokeWidth="2" />
+                  <path d="M 205 115 Q 105 90 25 75" stroke="#FEF08A" strokeWidth="3" fill="none" />
                 </g>
-                {/* Tier 2 */}
-                <g transform="translate(0, 35)">
-                  <path d="M -22 0 C -42 22 -46 50 -26 72 C -14 50 -14 25 -22 0 Z" fill="#FACC15" stroke="#CA8A04" strokeWidth="2.5" />
-                  <path d="M -8 0 C -24 25 -28 52 -14 76 C -4 52 -4 25 -8 0 Z" fill="#FFF200" stroke="#CA8A04" strokeWidth="2.5" />
-                  <path d="M 8 0 C 24 25 28 52 14 76 C 4 52 4 25 8 0 Z" fill="#FACC15" stroke="#CA8A04" strokeWidth="2.5" />
-                  <path d="M 22 0 C 42 22 46 50 26 72 C 14 50 14 25 22 0 Z" fill="#FFF200" stroke="#CA8A04" strokeWidth="2.5" />
-                </g>
-                {/* Tier 3 */}
-                <g transform="translate(0, 60)">
-                  <path d="M -16 0 C -32 18 -36 42 -20 62 C -10 42 -10 20 -16 0 Z" fill="#FFF200" stroke="#CA8A04" strokeWidth="2.5" />
-                  <path d="M 0 0 C -12 20 -14 44 0 65 C 8 44 8 20 0 0 Z" fill="#FDE047" stroke="#CA8A04" strokeWidth="2.5" />
-                  <path d="M 16 0 C 32 18 36 42 20 62 C 10 42 10 20 16 0 Z" fill="#FACC15" stroke="#CA8A04" strokeWidth="2.5" />
-                </g>
-                {/* Banana Heart Blossom */}
-                <path d="M 16 122 C 4 135 16 160 16 160 C 16 160 28 135 16 122 Z" fill="#881337" stroke="#4C0519" strokeWidth="2.5" />
-              </g>
-            </svg>
-          </div>
 
-          {/* Tree 2 (Left Mid - Ultra Detailed with Abundant Bananas) */}
-          <div className="w-84 sm:w-96 h-96 relative animate-tree-sway" style={{ animationDelay: '0.8s' }}>
-            <svg viewBox="0 0 420 420" className="w-full h-full drop-shadow-md">
-              <path d="M 200 420 C 194 290 206 200 188 135 C 184 200 180 290 172 420 Z" fill="#3D2314" stroke="#25150B" strokeWidth="3.5" />
-              <path d="M 197 340 C 188 315 180 315 175 340" fill="none" stroke="#25150B" strokeWidth="2.5" />
-              <g className="animate-frond-left">
-                <path d="M 188 135 C 130 60 40 60 10 120 C 70 112 130 120 188 135 Z" fill="#84CC16" stroke="#10B981" strokeWidth="3" />
-                <path d="M 188 135 C 130 60 40 60 10 120" fill="none" stroke="#FEF08A" strokeWidth="2.5" />
-              </g>
-              <g className="animate-frond-right">
-                <path d="M 188 135 C 245 30 335 0 395 40 C 335 48 265 85 188 135 Z" fill="#4ADE80" stroke="#10B981" strokeWidth="3" />
-                <path d="M 188 135 C 245 30 335 0 395 40" fill="none" stroke="#86EFAC" strokeWidth="2.5" />
-              </g>
-              <g transform="translate(172, 138)">
-                <path d="M 16 -5 Q 20 20 16 40 Q 12 70 16 120" fill="none" stroke="#65A30D" strokeWidth="6" strokeLinecap="round" />
-                <g transform="translate(0, 10)">
-                  <path d="M -26 0 C -48 24 -52 55 -30 80 C -18 55 -18 28 -26 0 Z" fill="#FACC15" stroke="#CA8A04" strokeWidth="2.5" />
-                  <path d="M -12 0 C -30 28 -34 60 -18 85 C -6 60 -6 30 -12 0 Z" fill="#FFF200" stroke="#CA8A04" strokeWidth="2.5" />
-                  <path d="M 12 0 C 30 28 34 60 18 85 C 6 60 6 30 12 0 Z" fill="#FACC15" stroke="#CA8A04" strokeWidth="2.5" />
-                  <path d="M 26 0 C 48 24 52 55 30 80 C 18 55 18 28 26 0 Z" fill="#FFF200" stroke="#CA8A04" strokeWidth="2.5" />
+                {/* 4. MID LEFT LEAF */}
+                <g>
+                  <path d="M 200 120 C 140 110 60 125 15 170 C 45 190 100 185 150 160 L 200 120 Z" fill="#65A30D" stroke="#4ADE80" strokeWidth="2" />
+                  <path d="M 200 120 Q 100 140 15 170" stroke="#BEF264" strokeWidth="3" fill="none" />
                 </g>
-                <g transform="translate(0, 35)">
-                  <path d="M -22 0 C -42 22 -46 50 -26 72 C -14 50 -14 25 -22 0 Z" fill="#FFF200" stroke="#CA8A04" strokeWidth="2.5" />
-                  <path d="M 0 0 C -12 20 -14 44 0 65 C 8 44 8 20 0 0 Z" fill="#FDE047" stroke="#CA8A04" strokeWidth="2.5" />
-                  <path d="M 22 0 C 42 22 46 50 26 72 C 14 50 14 25 22 0 Z" fill="#FACC15" stroke="#CA8A04" strokeWidth="2.5" />
-                </g>
-                <path d="M 16 122 C 4 135 16 160 16 160 C 16 160 28 135 16 122 Z" fill="#881337" stroke="#4C0519" strokeWidth="2.5" />
-              </g>
-            </svg>
-          </div>
 
-          {/* Tree 3 (Center Left - Ultra Detailed with Abundant Bananas) */}
-          <div className="w-84 sm:w-96 h-96 relative animate-tree-sway" style={{ animationDelay: '1.4s' }}>
-            <svg viewBox="0 0 420 420" className="w-full h-full drop-shadow-md">
-              <path d="M 210 420 C 216 290 204 200 222 135 C 226 200 230 290 238 420 Z" fill="#4A2E1B" stroke="#25150B" strokeWidth="3.5" />
-              <g className="animate-frond-left">
-                <path d="M 222 135 C 150 50 50 55 10 120 C 70 112 145 120 222 135 Z" fill="#4ADE80" stroke="#10B981" strokeWidth="3" />
-              </g>
-              <g className="animate-frond-right">
-                <path d="M 222 135 C 280 30 370 0 420 40 C 360 48 290 85 222 135 Z" fill="#84CC16" stroke="#10B981" strokeWidth="3" />
-              </g>
-              <g transform="translate(206, 138)">
-                <path d="M 16 -5 Q 20 20 16 40 Q 12 70 16 120" fill="none" stroke="#65A30D" strokeWidth="6" strokeLinecap="round" />
-                <g transform="translate(0, 10)">
-                  <path d="M -26 0 C -48 24 -52 55 -30 80 C -18 55 -18 28 -26 0 Z" fill="#FFF200" stroke="#CA8A04" strokeWidth="2.5" />
-                  <path d="M -12 0 C -30 28 -34 60 -18 85 C -6 60 -6 30 -12 0 Z" fill="#FACC15" stroke="#CA8A04" strokeWidth="2.5" />
-                  <path d="M 12 0 C 30 28 34 60 18 85 C 6 60 6 30 12 0 Z" fill="#FFF200" stroke="#CA8A04" strokeWidth="2.5" />
-                  <path d="M 26 0 C 48 24 52 55 30 80 C 18 55 18 28 26 0 Z" fill="#FACC15" stroke="#CA8A04" strokeWidth="2.5" />
+                {/* 5. MID RIGHT HANGING LEAF */}
+                <g>
+                  <path d="M 220 120 C 240 160 250 210 240 265 C 270 235 290 180 270 135 L 220 120 Z" fill="#4ADE80" stroke="#22C55E" strokeWidth="2" />
+                  <path d="M 220 120 Q 240 180 240 265" stroke="#FEF08A" strokeWidth="3" fill="none" />
                 </g>
-                <g transform="translate(0, 35)">
-                  <path d="M -22 0 C -42 22 -46 50 -26 72 C -14 50 -14 25 -22 0 Z" fill="#FACC15" stroke="#CA8A04" strokeWidth="2.5" />
-                  <path d="M 22 0 C 42 22 46 50 26 72 C 14 50 14 25 22 0 Z" fill="#FFF200" stroke="#CA8A04" strokeWidth="2.5" />
-                </g>
-                <path d="M 16 122 C 4 135 16 160 16 160 C 16 160 28 135 16 122 Z" fill="#881337" stroke="#4C0519" strokeWidth="2.5" />
-              </g>
-            </svg>
-          </div>
 
-          {/* Tree 4 (Center Right - Ultra Detailed with Abundant Bananas) */}
-          <div className="w-84 sm:w-96 h-96 relative animate-tree-sway" style={{ animationDelay: '0.4s' }}>
-            <svg viewBox="0 0 420 420" className="w-full h-full drop-shadow-md">
-              <path d="M 200 420 C 194 290 206 200 188 135 C 184 200 180 290 172 420 Z" fill="#3D2314" stroke="#25150B" strokeWidth="3.5" />
-              <g className="animate-frond-left">
-                <path d="M 188 135 C 130 60 40 60 10 120 C 70 112 130 120 188 135 Z" fill="#84CC16" stroke="#10B981" strokeWidth="3" />
-              </g>
-              <g className="animate-frond-right">
-                <path d="M 188 135 C 245 30 335 0 395 40 C 335 48 265 85 188 135 Z" fill="#4ADE80" stroke="#10B981" strokeWidth="3" />
-              </g>
-              <g transform="translate(172, 138)">
-                <path d="M 16 -5 Q 20 20 16 40 Q 12 70 16 120" fill="none" stroke="#65A30D" strokeWidth="6" strokeLinecap="round" />
-                <g transform="translate(0, 10)">
-                  <path d="M -26 0 C -48 24 -52 55 -30 80 C -18 55 -18 28 -26 0 Z" fill="#FACC15" stroke="#CA8A04" strokeWidth="2.5" />
-                  <path d="M -12 0 C -30 28 -34 60 -18 85 C -6 60 -6 30 -12 0 Z" fill="#FFF200" stroke="#CA8A04" strokeWidth="2.5" />
-                  <path d="M 12 0 C 30 28 34 60 18 85 C 6 60 6 30 12 0 Z" fill="#FACC15" stroke="#CA8A04" strokeWidth="2.5" />
-                  <path d="M 26 0 C 48 24 52 55 30 80 C 18 55 18 28 26 0 Z" fill="#FFF200" stroke="#CA8A04" strokeWidth="2.5" />
+                {/* 6. FAR RIGHT LEAF */}
+                <g>
+                  <path d="M 225 125 C 285 130 365 170 395 210 C 370 230 310 220 265 180 L 225 125 Z" fill="#84CC16" stroke="#4ADE80" strokeWidth="2" />
+                  <path d="M 225 125 Q 315 160 395 210" stroke="#FEF08A" strokeWidth="3" fill="none" />
                 </g>
-                <g transform="translate(0, 35)">
-                  <path d="M -22 0 C -42 22 -46 50 -26 72 C -14 50 -14 25 -22 0 Z" fill="#FFF200" stroke="#CA8A04" strokeWidth="2.5" />
-                  <path d="M 22 0 C 42 22 46 50 26 72 C 14 50 14 25 22 0 Z" fill="#FACC15" stroke="#CA8A04" strokeWidth="2.5" />
-                </g>
-                <path d="M 16 122 C 4 135 16 160 16 160 C 16 160 28 135 16 122 Z" fill="#881337" stroke="#4C0519" strokeWidth="2.5" />
-              </g>
-            </svg>
-          </div>
 
-          {/* Tree 5 (Right Mid - Ultra Detailed with Abundant Bananas) */}
-          <div className="w-84 sm:w-96 h-96 relative animate-tree-sway" style={{ animationDelay: '1.6s' }}>
-            <svg viewBox="0 0 420 420" className="w-full h-full drop-shadow-md">
-              <path d="M 210 420 C 216 290 204 200 222 135 C 226 200 230 290 238 420 Z" fill="#4A2E1B" stroke="#25150B" strokeWidth="3.5" />
-              <g className="animate-frond-left">
-                <path d="M 222 135 C 150 50 50 55 10 120 C 70 112 145 120 222 135 Z" fill="#4ADE80" stroke="#10B981" strokeWidth="3" />
-              </g>
-              <g className="animate-frond-right">
-                <path d="M 222 135 C 280 30 370 0 420 40 C 360 48 290 85 222 135 Z" fill="#84CC16" stroke="#10B981" strokeWidth="3" />
-              </g>
-              <g transform="translate(206, 138)">
-                <path d="M 16 -5 Q 20 20 16 40 Q 12 70 16 120" fill="none" stroke="#65A30D" strokeWidth="6" strokeLinecap="round" />
-                <g transform="translate(0, 10)">
-                  <path d="M -26 0 C -48 24 -52 55 -30 80 C -18 55 -18 28 -26 0 Z" fill="#FFF200" stroke="#CA8A04" strokeWidth="2.5" />
-                  <path d="M -12 0 C -30 28 -34 60 -18 85 C -6 60 -6 30 -12 0 Z" fill="#FACC15" stroke="#CA8A04" strokeWidth="2.5" />
-                  <path d="M 12 0 C 30 28 34 60 18 85 C 6 60 6 30 12 0 Z" fill="#FFF200" stroke="#CA8A04" strokeWidth="2.5" />
-                  <path d="M 26 0 C 48 24 52 55 30 80 C 18 55 18 28 26 0 Z" fill="#FACC15" stroke="#CA8A04" strokeWidth="2.5" />
-                </g>
-                <g transform="translate(0, 35)">
-                  <path d="M -22 0 C -42 22 -46 50 -26 72 C -14 50 -14 25 -22 0 Z" fill="#FACC15" stroke="#CA8A04" strokeWidth="2.5" />
-                  <path d="M 22 0 C 42 22 46 50 26 72 C 14 50 14 25 22 0 Z" fill="#FFF200" stroke="#CA8A04" strokeWidth="2.5" />
-                </g>
-                <path d="M 16 122 C 4 135 16 160 16 160 C 16 160 28 135 16 122 Z" fill="#881337" stroke="#4C0519" strokeWidth="2.5" />
-              </g>
-            </svg>
-          </div>
+                {/* CURVED STALK & TIERED BANANA BUNCH WITH RED FLOWER */}
+                <g>
+                  {/* Smooth Green Stalk Arching Down Left */}
+                  <path d="M 210 120 Q 190 100 170 120 Q 150 140 160 180" stroke="#84CC16" strokeWidth="9" fill="none" strokeLinecap="round" />
+                  <path d="M 210 120 Q 190 100 170 120 Q 150 140 160 180" stroke="#4ADE80" strokeWidth="6" fill="none" strokeLinecap="round" />
 
-          {/* Tree 6 (Far Right - Ultra Detailed with Abundant Bananas) */}
-          <div className="w-84 sm:w-96 h-96 relative animate-tree-sway" style={{ animationDelay: '1.0s' }}>
-            <svg viewBox="0 0 420 420" className="w-full h-full drop-shadow-md">
-              <path d="M 200 420 C 194 290 206 200 188 135 C 184 200 180 290 172 420 Z" fill="#3D2314" stroke="#25150B" strokeWidth="3.5" />
-              <g className="animate-frond-left">
-                <path d="M 188 135 C 130 60 40 60 10 120 C 70 112 130 120 188 135 Z" fill="#84CC16" stroke="#10B981" strokeWidth="3" />
-              </g>
-              <g className="animate-frond-right">
-                <path d="M 188 135 C 245 30 335 0 395 40 C 335 48 265 85 188 135 Z" fill="#4ADE80" stroke="#10B981" strokeWidth="3" />
-              </g>
-              <g transform="translate(172, 138)">
-                <path d="M 16 -5 Q 20 20 16 40 Q 12 70 16 120" fill="none" stroke="#65A30D" strokeWidth="6" strokeLinecap="round" />
-                <g transform="translate(0, 10)">
-                  <path d="M -26 0 C -48 24 -52 55 -30 80 C -18 55 -18 28 -26 0 Z" fill="#FACC15" stroke="#CA8A04" strokeWidth="2.5" />
-                  <path d="M -12 0 C -30 28 -34 60 -18 85 C -6 60 -6 30 -12 0 Z" fill="#FFF200" stroke="#CA8A04" strokeWidth="2.5" />
-                  <path d="M 12 0 C 30 28 34 60 18 85 C 6 60 6 30 12 0 Z" fill="#FACC15" stroke="#CA8A04" strokeWidth="2.5" />
-                  <path d="M 26 0 C 48 24 52 55 30 80 C 18 55 18 28 26 0 Z" fill="#FFF200" stroke="#CA8A04" strokeWidth="2.5" />
+                  {/* Tiered Banana Bunch Cluster */}
+                  <g transform="translate(115, 140)">
+                    {/* Tier 1 */}
+                    <g transform="translate(15, 0)">
+                      <path d="M 0 10 Q 15 -5 30 10 Q 20 25 0 10 Z" fill="#FACC15" stroke="#CA8A04" strokeWidth="1" />
+                      <path d="M 12 12 Q 27 -3 42 12 Q 32 27 12 12 Z" fill="#FFF200" stroke="#CA8A04" strokeWidth="1" />
+                      <path d="M 24 14 Q 39 -1 54 14 Q 44 29 24 14 Z" fill="#FACC15" stroke="#CA8A04" strokeWidth="1" />
+                    </g>
+                    {/* Tier 2 */}
+                    <g transform="translate(10, 18)">
+                      <path d="M 0 10 Q 15 -5 30 10 Q 20 25 0 10 Z" fill="#FFF200" stroke="#CA8A04" strokeWidth="1" />
+                      <path d="M 12 12 Q 27 -3 42 12 Q 32 27 12 12 Z" fill="#FACC15" stroke="#CA8A04" strokeWidth="1" />
+                      <path d="M 24 14 Q 39 -1 54 14 Q 44 29 24 14 Z" fill="#FFF200" stroke="#CA8A04" strokeWidth="1" />
+                    </g>
+                    {/* Tier 3 */}
+                    <g transform="translate(5, 36)">
+                      <path d="M 0 10 Q 15 -5 30 10 Q 20 25 0 10 Z" fill="#FACC15" stroke="#CA8A04" strokeWidth="1" />
+                      <path d="M 12 12 Q 27 -3 42 12 Q 32 27 12 12 Z" fill="#FFF200" stroke="#CA8A04" strokeWidth="1" />
+                      <path d="M 24 14 Q 39 -1 54 14 Q 44 29 24 14 Z" fill="#FACC15" stroke="#CA8A04" strokeWidth="1" />
+                    </g>
+                    {/* Red Banana Heart Flower Tip */}
+                    <path d="M 32 58 C 22 58 18 70 32 88 C 46 70 42 58 32 58 Z" fill="#F43F5E" stroke="#BE123C" strokeWidth="1.5" />
+                  </g>
                 </g>
-                <g transform="translate(0, 35)">
-                  <path d="M -22 0 C -42 22 -46 50 -26 72 C -14 50 -14 25 -22 0 Z" fill="#FFF200" stroke="#CA8A04" strokeWidth="2.5" />
-                  <path d="M 22 0 C 42 22 46 50 26 72 C 14 50 14 25 22 0 Z" fill="#FACC15" stroke="#CA8A04" strokeWidth="2.5" />
-                </g>
-                <path d="M 16 122 C 4 135 16 160 16 160 C 16 160 28 135 16 122 Z" fill="#881337" stroke="#4C0519" strokeWidth="2.5" />
-              </g>
-            </svg>
-          </div>
+              </svg>
+            </div>
+          ))}
         </div>
 
         {/* ------------------------------------------------------------- */}
-        {/* 5. VECTOR LAYER: Floating Leaves & Shimmer Particles            */}
+        {/* 5. MAIN CONTENT CARD (Matching Vercel Old Design 100%)         */}
         {/* ------------------------------------------------------------- */}
-        <div className="absolute inset-0 pointer-events-none z-10 overflow-hidden">
-          <div className="absolute top-20 left-10 animate-leaf-sway-1 opacity-85">
-            <svg className="w-10 h-10 text-[#4ADE80] fill-current drop-shadow-md" viewBox="0 0 24 24">
-              <path d="M17,8C8,10,5.9,16.17,3.82,21.34L5.71,22l1-2.3A4.49,4.49,0,0,0,8,20C19,20,22,3,22,3A32.2,32.2,0,0,0,17,8Z"/>
-            </svg>
-          </div>
-          <div className="absolute top-1/2 right-1/4 animate-leaf-sway-2 opacity-75">
-            <svg className="w-8 h-8 text-[#84CC16] fill-current drop-shadow-md" viewBox="0 0 24 24">
-              <path d="M17,8C8,10,5.9,16.17,3.82,21.34L5.71,22l1-2.3A4.49,4.49,0,0,0,8,20C19,20,22,3,22,3A32.2,32.2,0,0,0,17,8Z"/>
-            </svg>
-          </div>
-          <div className="absolute top-1/3 left-1/4 w-2.5 h-2.5 rounded-full bg-[#FFF200] blur-[1px] animate-particle" />
-          <div className="absolute top-2/3 right-1/3 w-3 h-3 rounded-full bg-[#4ADE80] blur-[1px] animate-particle" style={{ animationDelay: '1.8s' }} />
-        </div>
-
-        {/* ------------------------------------------------------------- */}
-        {/* 5. MAIN PINNED SHOWCASE: Fixed Left Card & Animated Right Image */}
-        {/* ------------------------------------------------------------- */}
-        <div className="max-w-7xl mx-auto w-full z-20 relative my-auto px-4 sm:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center min-h-[460px] sm:min-h-[520px]">
+        <div className="relative z-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full pt-28 sm:pt-32 pb-8 flex-grow flex items-center">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center w-full">
             
-            {/* LEFT COLUMN: Fixed Organic Panel (#FEFAD3) with Smooth Content Transitions */}
-            <div className="lg:col-span-7 flex justify-center lg:justify-start relative">
-              <div 
-                className="bg-[#FEFAD3] p-8 sm:p-14 text-left max-w-xl relative flex flex-col justify-center space-y-4 sm:space-y-5 shadow-2xl border border-white/50 backdrop-blur-sm transition-all duration-500"
-                style={{
-                  borderRadius: '55% 45% 70% 30% / 40% 60% 40% 60%'
-                }}
-              >
-                {/* Animated Product Title */}
-                <AnimatePresence mode="wait">
-                  <motion.h3 
-                    key={currentProduct.title}
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    exit={{ opacity: 0, x: 20 }}
-                    transition={{ duration: 0.4, ease: 'easeOut' }}
-                    className="text-2xl sm:text-5xl font-extrabold font-accent text-[#0B6E4F] tracking-wide leading-tight drop-shadow-sm"
-                  >
+            {/* Left Column: Organic Fluid Blob Card with Cursive Font Title */}
+            <div className="lg:col-span-7 text-left">
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={currentProduct.id}
+                  initial={{ opacity: 0, x: -40, scale: 0.9 }}
+                  animate={{ opacity: 1, x: 0, scale: 1 }}
+                  exit={{ opacity: 0, x: 40, scale: 0.9 }}
+                  transition={{ duration: 0.4, ease: 'easeOut' }}
+                  className="bg-[#FEFAD3] text-[#083c16] rounded-[220px_100px_170px_80px/100px_180px_90px_160px] p-8 sm:p-12 sm:px-14 shadow-2xl border-4 border-white/60 relative z-10 max-w-xl"
+                >
+                  {/* Cursive Brand Title */}
+                  <h2 className="text-3xl sm:text-5xl lg:text-6xl font-black font-accent text-[#083c16] leading-tight mb-4 tracking-wide">
                     {currentProduct.title}
-                  </motion.h3>
-                </AnimatePresence>
+                  </h2>
 
-                {/* Animated Product Description */}
-                <AnimatePresence mode="wait">
-                  <motion.p 
-                    key={currentProduct.description}
-                    initial={{ opacity: 0, y: 15 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -15 }}
-                    transition={{ duration: 0.4, delay: 0.05 }}
-                    className="text-xs sm:text-base text-[#0B6E4F] leading-relaxed font-semibold max-w-md"
-                  >
+                  {/* Product Description */}
+                  <p className="text-base sm:text-lg font-semibold text-[#083c16]/90 leading-relaxed">
                     {currentProduct.description}
-                  </motion.p>
-                </AnimatePresence>
-
-              </div>
+                  </p>
+                </motion.div>
+              </AnimatePresence>
             </div>
 
-            {/* RIGHT COLUMN: Pinned Animated Product Showcase (Increased Image Size for Mobile Phone Users) */}
-            <div className="lg:col-span-5 flex justify-center items-center relative min-h-[300px] sm:min-h-[420px]">
+            {/* Right Column: Standing Monkey Mascot holding Product Cup */}
+            <div className="lg:col-span-5 flex justify-center relative select-none">
+              <div className="absolute inset-0 bg-[#FFF200]/30 rounded-full blur-3xl transform scale-90 pointer-events-none" />
+
               <AnimatePresence mode="wait">
-                <motion.div 
+                <motion.div
                   key={currentProduct.id}
-                  initial={{ opacity: 0, scale: 0.82, rotate: -8, y: 30 }}
-                  animate={{ opacity: 1, scale: 1, rotate: 0, y: 0 }}
-                  exit={{ opacity: 0, scale: 0.85, rotate: 8, y: -30 }}
-                  transition={{ duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
-                  className="w-[280px] xs:w-[320px] sm:w-[380px] md:w-[420px] lg:w-[450px] max-w-[88vw] h-auto relative z-20 animate-float"
+                  initial={{ opacity: 0, scale: 0.8, rotate: -5 }}
+                  animate={{ opacity: 1, scale: 1, rotate: 0 }}
+                  exit={{ opacity: 0, scale: 0.8, rotate: 5 }}
+                  transition={{ duration: 0.4, ease: 'easeOut' }}
+                  className="relative z-10 max-w-[300px] sm:max-w-[350px] lg:max-w-[420px] w-full animate-float"
                 >
-                  {/* Drop Shadow Underneath Image */}
-                  <div className="absolute -bottom-4 left-1/2 -translate-x-1/2 w-3/4 h-8 bg-black/40 rounded-full blur-lg z-0" />
-                  
-                  {/* Product Showcase Image */}
                   <img 
                     src={currentProduct.image} 
                     alt={currentProduct.title} 
-                    className="w-full h-auto object-contain relative z-10 drop-shadow-[0_30px_50px_rgba(0,0,0,0.5)]"
+                    className="w-full h-auto object-contain drop-shadow-[0_25px_50px_rgba(0,0,0,0.4)]" 
                   />
                 </motion.div>
               </AnimatePresence>
             </div>
 
           </div>
-        </div>
-
-        {/* ------------------------------------------------------------- */}
-        {/* 6. LAYER: Foreground Depth-of-Field Blur Leaves                */}
-        {/* ------------------------------------------------------------- */}
-        <div 
-          ref={fgLeavesRef}
-          className="absolute top-8 -right-6 z-30 pointer-events-none opacity-80 will-change-transform transform-gpu"
-        >
-          <svg className="w-28 h-28 text-[#10B981] fill-current transform rotate-45" viewBox="0 0 24 24">
-            <path d="M17,8C8,10,5.9,16.17,3.82,21.34L5.71,22l1-2.3A4.49,4.49,0,0,0,8,20C19,20,22,3,22,3A32.2,32.2,0,0,0,17,8Z"/>
-          </svg>
         </div>
 
       </div>
