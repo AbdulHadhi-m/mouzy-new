@@ -16,6 +16,10 @@ export const ContactPage: React.FC<ContactPageProps> = ({ onNavigateHome }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
 
+  const [errorMessage, setErrorMessage] = useState('');
+
+  const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxeb4MpxG7TiSC2o9XjKTR4I966DnrkyjuWJOr74Ap-x56ZyIug5PkJe3AW9gr6uEPh_w/exec';
+
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
@@ -23,13 +27,43 @@ export const ContactPage: React.FC<ContactPageProps> = ({ onNavigateHome }) => {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
-    setTimeout(() => {
-      setIsSubmitting(false);
+    setErrorMessage('');
+
+    try {
+      const payload = new URLSearchParams();
+      payload.append('firstName', formData.firstName);
+      payload.append('lastName', formData.lastName);
+      payload.append('email', formData.email);
+      payload.append('mobile', formData.mobile);
+      payload.append('message', formData.message);
+
+      await fetch(GOOGLE_SCRIPT_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        body: payload.toString()
+      });
+
+      // Clear the form fields after successful submission
+      setFormData({
+        firstName: '',
+        lastName: '',
+        email: '',
+        mobile: '',
+        message: ''
+      });
       setIsSubmitted(true);
-    }, 1200);
+    } catch (error) {
+      console.error('Submission error:', error);
+      setErrorMessage('Failed to send message. Please try again.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -249,6 +283,13 @@ export const ContactPage: React.FC<ContactPageProps> = ({ onNavigateHome }) => {
                       </h4>
                       <p className="text-xs font-semibold text-gray-600">Fill in the details below and we'll reply promptly.</p>
                     </div>
+
+                    {errorMessage && (
+                      <div className="p-3 bg-red-100 border border-red-400 text-red-700 text-xs font-bold rounded-xl flex items-center gap-2">
+                        <i className="fas fa-exclamation-circle" />
+                        <span>{errorMessage}</span>
+                      </div>
+                    )}
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5">
                       <div>
